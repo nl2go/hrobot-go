@@ -1,0 +1,11 @@
+image: golang:latest
+
+stages:
+    - test
+
+test:
+    image: golang:latest
+    stage: test
+    script:
+        - make cover
+    coverage: '/total:\s*\(statements\)\s*\d+.\d+\%/'
