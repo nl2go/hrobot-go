@@ -1,0 +1,23 @@
+{
+    "rescue":{
+      "server_ip":"123.123.123.123",
+      "server_number":321,
+      "os":[
+        "linux",
+        "freebsd",
+        "vkvm"
+      ],
+      "arch":[
+        64,
+        32
+      ],
+      "active":false,
+      "password":null,
+      "authorized_key":[
+  
+      ],
+      "host_key":[
+  
+      ]
+    }
+  }
