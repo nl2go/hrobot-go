@@ -7,9 +7,9 @@ import (
 	"net/http/httptest"
 	"os"
 
+	client "gitlab.com/newsletter2go/hrobot-go"
+	"gitlab.com/newsletter2go/hrobot-go/models"
 	. "gopkg.in/check.v1"
-
-	"gitlab.com/newsletter2go/hrobot-go"
 )
 
 func (s *ClientSuite) TestServerGetListSuccess(c *C) {
@@ -60,4 +60,64 @@ func (s *ClientSuite) TestServerGetSuccess(c *C) {
 	server, err := robotClient.ServerGet(testServerIP)
 	c.Assert(err, IsNil)
 	c.Assert(server.ServerIP, Equals, testServerIP)
+}
+
+func (s *ClientSuite) TestServerSetNameSuccess(c *C) {
+	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		reqContentType := r.Header.Get("Content-Type")
+		c.Assert(reqContentType, Equals, "application/x-www-form-urlencoded")
+
+		body, bodyErr := ioutil.ReadAll(r.Body)
+		c.Assert(bodyErr, IsNil)
+		c.Assert(string(body), Equals, "server_name=mongodb-prod-px62-nvme-hetzner-nbg1-dc1-123456")
+
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusOK)
+
+		pwd, pwdErr := os.Getwd()
+		c.Assert(pwdErr, IsNil)
+
+		data, readErr := ioutil.ReadFile(fmt.Sprintf("%s/test/response/server_get.json", pwd))
+		c.Assert(readErr, IsNil)
+
+		_, err := w.Write(data)
+		c.Assert(err, IsNil)
+	}))
+	defer ts.Close()
+
+	robotClient := client.NewBasicAuthClient("user", "pass")
+	robotClient.SetBaseURL(ts.URL)
+
+	input := &models.ServerSetNameInput{
+		Name: "mongodb-prod-px62-nvme-hetzner-nbg1-dc1-123456",
+	}
+
+	server, err := robotClient.ServerSetName(testServerIP, input)
+	c.Assert(err, IsNil)
+	c.Assert(server.ServerIP, Equals, testServerIP)
+}
+
+func (s *ClientSuite) TestServerReverseSuccess(c *C) {
+	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusOK)
+
+		pwd, pwdErr := os.Getwd()
+		c.Assert(pwdErr, IsNil)
+
+		data, readErr := ioutil.ReadFile(fmt.Sprintf("%s/test/response/server_reverse.json", pwd))
+		c.Assert(readErr, IsNil)
+
+		_, err := w.Write(data)
+		c.Assert(err, IsNil)
+	}))
+	defer ts.Close()
+
+	robotClient := client.NewBasicAuthClient("user", "pass")
+	robotClient.SetBaseURL(ts.URL)
+
+	cancellation, err := robotClient.ServerReverse(testServerIP)
+	c.Assert(err, IsNil)
+	c.Assert(cancellation.ServerIP, Equals, testServerIP)
+	c.Assert(cancellation.CancellationDate, Equals, "2014-04-15")
 }

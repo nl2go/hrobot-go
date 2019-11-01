@@ -55,30 +55,42 @@ func (c *Client) ServerGet(ip string) (*models.Server, error) {
 	return &serverResp.Server, nil
 }
 
-func (c *Client) ServerSetName(ip, name string) error {
+func (c *Client) ServerSetName(ip string, input *models.ServerSetNameInput) (*models.Server, error) {
 	url := fmt.Sprintf(c.baseURL+"/server/%s", ip)
 
 	formData := neturl.Values{}
-	formData.Set("server_name", name)
+	formData.Set("server_name", input.Name)
 
 	req, err := http.NewRequest("POST", url, strings.NewReader(formData.Encode()))
 	if err != nil {
-		return err
+		return nil, err
 	}
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 
-	_, err = c.doRequest(req)
-	return err
+	bytes, err := c.doRequest(req)
+	var serverResp models.ServerResponse
+	err = json.Unmarshal(bytes, &serverResp)
+	if err != nil {
+		return nil, err
+	}
+
+	return &serverResp.Server, nil
 }
 
-func (c *Client) ServerReverse(ip string) error {
+func (c *Client) ServerReverse(ip string) (*models.Cancellation, error) {
 	url := fmt.Sprintf(c.baseURL+"/server/%s/reversal", ip)
 
 	req, err := http.NewRequest("POST", url, nil)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
-	_, err = c.doRequest(req)
-	return err
+	bytes, err := c.doRequest(req)
+	var cancelResp models.CancellationResponse
+	err = json.Unmarshal(bytes, &cancelResp)
+	if err != nil {
+		return nil, err
+	}
+
+	return &cancelResp.Cancellation, nil
 }

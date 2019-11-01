@@ -7,8 +7,8 @@ type RobotClient interface {
 	SetUserAgent(userAgent string)
 	ServerGetList() ([]models.Server, error)
 	ServerGet(ip string) (*models.Server, error)
-	ServerSetName(ip, name string) error
-	ServerReverse(ip string) error
+	ServerSetName(ip string, input *models.ServerSetNameInput) (*models.Server, error)
+	ServerReverse(ip string) (*models.Cancellation, error)
 	KeyGetList() ([]models.Key, error)
 	IPGetList() ([]models.IP, error)
 	RDnsGetList() ([]models.Rdns, error)

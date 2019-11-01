@@ -32,3 +32,7 @@ type Server struct {
 	Wol          bool     `json:"wol"`
 	HotSwap      bool     `json:"hot_swap"`
 }
+
+type ServerSetNameInput struct {
+	Name string
+}
