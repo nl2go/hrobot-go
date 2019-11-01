@@ -1,0 +1,45 @@
+[
+    {
+      "server":{
+        "server_ip":"123.123.123.123",
+        "server_number":321,
+        "server_name":"server1",
+        "product":"DS 3000",
+        "dc":"NBG1-DC1",
+        "traffic":"5 TB",
+        "flatrate":true,
+        "status":"ready",
+        "throttled":true,
+        "cancelled":false,
+        "paid_until":"2010-09-02",
+        "ip":[
+          "123.123.123.123"
+        ],
+        "subnet":[
+          {
+            "ip":"2a01:4f8:111:4221::",
+            "mask":"64"
+          }
+        ]
+      }
+    },
+    {
+      "server":{
+        "server_ip":"123.123.123.124",
+        "server_number":421,
+        "server_name":"server2",
+        "product":"X5",
+        "dc":"FSN1-DC10",
+        "traffic":"2 TB",
+        "flatrate":true,
+        "status":"ready",
+        "throttled":false,
+        "cancelled":false,
+        "paid_until":"2010-06-11",
+        "ip":[
+          "123.123.123.124"
+        ],
+        "subnet":null
+      }
+    }
+  ]
