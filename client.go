@@ -7,7 +7,7 @@ import (
 )
 
 const baseURL string = "https://robot-ws.your-server.de"
-const version = "0.1.0"
+const version = "0.1.1"
 const userAgent = "hrobot-client/" + version
 
 type Client struct {
