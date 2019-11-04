@@ -1,5 +1,9 @@
 package models
 
+const ResetTypePower = "power"
+const ResetTypeHardware = "hw"
+const ResetTypeManual = "man"
+
 type ResetResponse struct {
 	Reset Reset `json:"reset"`
 }

@@ -64,7 +64,7 @@ func (s *ClientSuite) TestResetSetSuccess(c *C) {
 	robotClient.SetBaseURL(ts.URL)
 
 	input := &models.ResetSetInput{
-		Type: "hw",
+		Type: models.ResetTypeHardware,
 	}
 
 	reset, err := robotClient.ResetSet(testServerIP, input)
