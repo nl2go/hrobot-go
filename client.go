@@ -34,6 +34,10 @@ func (c *Client) SetUserAgent(userAgent string) {
 	c.userAgent = userAgent
 }
 
+func (c *Client) GetVersion() string {
+	return version
+}
+
 func (c *Client) doRequest(req *http.Request) ([]byte, error) {
 	req.Header.Set("User-Agent", c.userAgent)
 	req.SetBasicAuth(c.Username, c.Password)

@@ -5,6 +5,7 @@ import "gitlab.com/newsletter2go/hrobot-go/models"
 type RobotClient interface {
 	SetBaseURL(baseURL string)
 	SetUserAgent(userAgent string)
+	GetVersion() string
 	ServerGetList() ([]models.Server, error)
 	ServerGet(ip string) (*models.Server, error)
 	ServerSetName(ip string, input *models.ServerSetNameInput) (*models.Server, error)

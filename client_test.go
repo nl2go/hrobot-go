@@ -28,7 +28,8 @@ const testIP2 = "124.124.124.124"
 func (s *ClientSuite) TestSetDefaultUserAgent(c *C) {
 	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		reqUserAgent := r.Header.Get("User-Agent")
-		c.Assert(reqUserAgent, Equals, "hrobot-client/1.0.0")
+		robotClient := client.NewBasicAuthClient("user", "pass")
+		c.Assert(reqUserAgent, Equals, fmt.Sprintf("hrobot-client/%s", robotClient.GetVersion()))
 
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusOK)
