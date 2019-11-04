@@ -15,4 +15,6 @@ type RobotClient interface {
 	RDnsGet(ip string) (*models.Rdns, error)
 	BootRescueGet(ip string) (*models.RescueOptions, error)
 	BootRescueSet(ip string, input *models.RescueSetInput) (*models.RescueValues, error)
+	ResetGet(ip string) (*models.Reset, error)
+	ResetSet(ip string, input *models.ResetSetInput) (*models.ResetPost, error)
 }
