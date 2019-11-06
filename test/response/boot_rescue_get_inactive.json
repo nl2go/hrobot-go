@@ -13,11 +13,7 @@
       ],
       "active":false,
       "password":null,
-      "authorized_key":[
-  
-      ],
-      "host_key":[
-  
-      ]
+      "authorized_key":[],
+      "host_key":[]
     }
   }

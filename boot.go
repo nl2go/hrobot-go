@@ -9,7 +9,7 @@ import (
 	"gitlab.com/newsletter2go/hrobot-go/models"
 )
 
-func (c *Client) BootRescueGet(ip string) (*models.RescueOptions, error) {
+func (c *Client) BootRescueGet(ip string) (*models.Rescue, error) {
 	url := fmt.Sprintf(c.baseURL+"/boot/%s/rescue", ip)
 	bytes, err := c.doGetRequest(url)
 	if err != nil {
@@ -25,7 +25,7 @@ func (c *Client) BootRescueGet(ip string) (*models.RescueOptions, error) {
 	return &rescueResp.Rescue, nil
 }
 
-func (c *Client) BootRescueSet(ip string, input *models.RescueSetInput) (*models.RescueValues, error) {
+func (c *Client) BootRescueSet(ip string, input *models.RescueSetInput) (*models.Rescue, error) {
 	url := fmt.Sprintf(c.baseURL+"/boot/%s/rescue", ip)
 
 	formData := neturl.Values{}
@@ -42,7 +42,7 @@ func (c *Client) BootRescueSet(ip string, input *models.RescueSetInput) (*models
 		return nil, err
 	}
 
-	var rescueResp models.RescueSetResponse
+	var rescueResp models.RescueGetResponse
 	err = json.Unmarshal(bytes, &rescueResp)
 	if err != nil {
 		return nil, err

@@ -1,0 +1,21 @@
+{
+    "rescue": {
+        "active": true,
+        "arch": 64,
+        "authorized_key": [
+            {
+                "key": {
+                    "fingerprint": "fi:ng:er:pr:in:t0:00:00:00:00:00:00:00:00:00:00",
+                    "name": "admin",
+                    "size": 4096,
+                    "type": "RSA"
+                }
+            }
+        ],
+        "host_key": [],
+        "os": "linux",
+        "password": "qwertz1234",
+        "server_ip": "123.123.123.123",
+        "server_number": 321
+    }
+}

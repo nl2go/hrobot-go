@@ -13,7 +13,7 @@ import (
 	"gitlab.com/newsletter2go/hrobot-go/models"
 )
 
-func (s *ClientSuite) TestBootRescueGetSuccess(c *C) {
+func (s *ClientSuite) TestBootRescueGetInactiveSuccess(c *C) {
 	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusOK)
@@ -21,7 +21,31 @@ func (s *ClientSuite) TestBootRescueGetSuccess(c *C) {
 		pwd, pwdErr := os.Getwd()
 		c.Assert(pwdErr, IsNil)
 
-		data, readErr := ioutil.ReadFile(fmt.Sprintf("%s/test/response/boot_rescue_get.json", pwd))
+		data, readErr := ioutil.ReadFile(fmt.Sprintf("%s/test/response/boot_rescue_get_inactive.json", pwd))
+		c.Assert(readErr, IsNil)
+
+		_, err := w.Write(data)
+		c.Assert(err, IsNil)
+	}))
+	defer ts.Close()
+
+	robotClient := client.NewBasicAuthClient("user", "pass")
+	robotClient.SetBaseURL(ts.URL)
+
+	rescue, err := robotClient.BootRescueGet(testServerIP)
+	c.Assert(err, IsNil)
+	c.Assert(rescue.ServerIP, Equals, testServerIP)
+}
+
+func (s *ClientSuite) TestBootRescueGetActiveSuccess(c *C) {
+	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusOK)
+
+		pwd, pwdErr := os.Getwd()
+		c.Assert(pwdErr, IsNil)
+
+		data, readErr := ioutil.ReadFile(fmt.Sprintf("%s/test/response/boot_rescue_get_active.json", pwd))
 		c.Assert(readErr, IsNil)
 
 		_, err := w.Write(data)
