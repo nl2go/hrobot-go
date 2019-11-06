@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"net/url"
+	"strings"
 )
 
 const baseURL string = "https://robot-ws.your-server.de"
@@ -36,6 +38,35 @@ func (c *Client) SetUserAgent(userAgent string) {
 
 func (c *Client) GetVersion() string {
 	return version
+}
+
+func (c *Client) doGetRequest(url string) ([]byte, error) {
+	req, err := http.NewRequest("GET", url, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	bytes, err := c.doRequest(req)
+	if err != nil {
+		return nil, err
+	}
+
+	return bytes, nil
+}
+
+func (c *Client) doPostFormRequest(url string, formData url.Values) ([]byte, error) {
+	req, err := http.NewRequest("POST", url, strings.NewReader(formData.Encode()))
+	if err != nil {
+		return nil, err
+	}
+	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+
+	bytes, err := c.doRequest(req)
+	if err != nil {
+		return nil, err
+	}
+
+	return bytes, nil
 }
 
 func (c *Client) doRequest(req *http.Request) ([]byte, error) {

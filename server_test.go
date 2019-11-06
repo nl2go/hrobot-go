@@ -62,6 +62,29 @@ func (s *ClientSuite) TestServerGetSuccess(c *C) {
 	c.Assert(server.ServerIP, Equals, testServerIP)
 }
 
+func (s *ClientSuite) TestServerGetNotFound(c *C) {
+	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusNotFound)
+
+		pwd, pwdErr := os.Getwd()
+		c.Assert(pwdErr, IsNil)
+
+		data, readErr := ioutil.ReadFile(fmt.Sprintf("%s/test/response/server_get_404.json", pwd))
+		c.Assert(readErr, IsNil)
+
+		_, err := w.Write(data)
+		c.Assert(err, IsNil)
+	}))
+	defer ts.Close()
+
+	robotClient := client.NewBasicAuthClient("user", "pass")
+	robotClient.SetBaseURL(ts.URL)
+
+	_, err := robotClient.ServerGet(testServerIP)
+	c.Assert(err, NotNil)
+}
+
 func (s *ClientSuite) TestServerSetNameSuccess(c *C) {
 	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		reqContentType := r.Header.Get("Content-Type")

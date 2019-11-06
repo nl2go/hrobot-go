@@ -1,0 +1,7 @@
+{
+    "error": {
+        "code": "SERVER_NOT_FOUND",
+        "message": "server not found",
+        "status": 404
+    }
+}

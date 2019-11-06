@@ -20,7 +20,7 @@ import (
 func main() {
     robotClient := client.NewBasicAuthClient("user", "pass")
 
-	servers, err := robotClient.ServerGetList()
+    servers, err := robotClient.ServerGetList()
     if err != nil {
         log.Fatalf("error while retrieving server list: %s\n", err)
     }

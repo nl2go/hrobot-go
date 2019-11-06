@@ -3,18 +3,13 @@ package client
 import (
 	"encoding/json"
 	"fmt"
-	"net/http"
 
 	"gitlab.com/newsletter2go/hrobot-go/models"
 )
 
 func (c *Client) RDnsGetList() ([]models.Rdns, error) {
 	url := c.baseURL + "/rdns"
-	req, err := http.NewRequest("GET", url, nil)
-	if err != nil {
-		return nil, err
-	}
-	bytes, err := c.doRequest(req)
+	bytes, err := c.doGetRequest(url)
 	if err != nil {
 		return nil, err
 	}
@@ -35,11 +30,7 @@ func (c *Client) RDnsGetList() ([]models.Rdns, error) {
 
 func (c *Client) RDnsGet(ip string) (*models.Rdns, error) {
 	url := fmt.Sprintf(c.baseURL+"/rdns/%s", ip)
-	req, err := http.NewRequest("GET", url, nil)
-	if err != nil {
-		return nil, err
-	}
-	bytes, err := c.doRequest(req)
+	bytes, err := c.doGetRequest(url)
 	if err != nil {
 		return nil, err
 	}

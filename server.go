@@ -3,20 +3,14 @@ package client
 import (
 	"encoding/json"
 	"fmt"
-	"net/http"
 	neturl "net/url"
-	"strings"
 
 	"gitlab.com/newsletter2go/hrobot-go/models"
 )
 
 func (c *Client) ServerGetList() ([]models.Server, error) {
 	url := c.baseURL + "/server"
-	req, err := http.NewRequest("GET", url, nil)
-	if err != nil {
-		return nil, err
-	}
-	bytes, err := c.doRequest(req)
+	bytes, err := c.doGetRequest(url)
 	if err != nil {
 		return nil, err
 	}
@@ -37,11 +31,7 @@ func (c *Client) ServerGetList() ([]models.Server, error) {
 
 func (c *Client) ServerGet(ip string) (*models.Server, error) {
 	url := fmt.Sprintf(c.baseURL+"/server/%s", ip)
-	req, err := http.NewRequest("GET", url, nil)
-	if err != nil {
-		return nil, err
-	}
-	bytes, err := c.doRequest(req)
+	bytes, err := c.doGetRequest(url)
 	if err != nil {
 		return nil, err
 	}
@@ -61,13 +51,11 @@ func (c *Client) ServerSetName(ip string, input *models.ServerSetNameInput) (*mo
 	formData := neturl.Values{}
 	formData.Set("server_name", input.Name)
 
-	req, err := http.NewRequest("POST", url, strings.NewReader(formData.Encode()))
+	bytes, err := c.doPostFormRequest(url, formData)
 	if err != nil {
 		return nil, err
 	}
-	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 
-	bytes, err := c.doRequest(req)
 	var serverResp models.ServerResponse
 	err = json.Unmarshal(bytes, &serverResp)
 	if err != nil {
@@ -80,12 +68,11 @@ func (c *Client) ServerSetName(ip string, input *models.ServerSetNameInput) (*mo
 func (c *Client) ServerReverse(ip string) (*models.Cancellation, error) {
 	url := fmt.Sprintf(c.baseURL+"/server/%s/reversal", ip)
 
-	req, err := http.NewRequest("POST", url, nil)
+	bytes, err := c.doPostFormRequest(url, nil)
 	if err != nil {
 		return nil, err
 	}
 
-	bytes, err := c.doRequest(req)
 	var cancelResp models.CancellationResponse
 	err = json.Unmarshal(bytes, &cancelResp)
 	if err != nil {

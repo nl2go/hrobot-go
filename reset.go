@@ -3,20 +3,14 @@ package client
 import (
 	"encoding/json"
 	"fmt"
-	"net/http"
 	neturl "net/url"
-	"strings"
 
 	"gitlab.com/newsletter2go/hrobot-go/models"
 )
 
 func (c *Client) ResetGet(ip string) (*models.Reset, error) {
 	url := fmt.Sprintf(c.baseURL+"/reset/%s", ip)
-	req, err := http.NewRequest("GET", url, nil)
-	if err != nil {
-		return nil, err
-	}
-	bytes, err := c.doRequest(req)
+	bytes, err := c.doGetRequest(url)
 	if err != nil {
 		return nil, err
 	}
@@ -36,13 +30,11 @@ func (c *Client) ResetSet(ip string, input *models.ResetSetInput) (*models.Reset
 	formData := neturl.Values{}
 	formData.Set("type", input.Type)
 
-	req, err := http.NewRequest("POST", url, strings.NewReader(formData.Encode()))
+	bytes, err := c.doPostFormRequest(url, formData)
 	if err != nil {
 		return nil, err
 	}
-	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 
-	bytes, err := c.doRequest(req)
 	var resetResp models.ResetPostResponse
 	err = json.Unmarshal(bytes, &resetResp)
 	if err != nil {
