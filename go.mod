@@ -1,4 +1,4 @@
-module gitlab.com/newsletter2go/hrobot-go
+module github.com/nl2go/hrobot-go
 
 go 1.13
 

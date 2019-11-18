@@ -9,7 +9,7 @@ import (
 
 	. "gopkg.in/check.v1"
 
-	"gitlab.com/newsletter2go/hrobot-go"
+	"github.com/nl2go/hrobot-go"
 )
 
 func (s *ClientSuite) TestKeyListSuccess(c *C) {

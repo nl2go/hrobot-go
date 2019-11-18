@@ -1,6 +1,6 @@
 package client
 
-import "gitlab.com/newsletter2go/hrobot-go/models"
+import "github.com/nl2go/hrobot-go/models"
 
 type RobotClient interface {
 	SetBaseURL(baseURL string)

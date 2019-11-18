@@ -5,7 +5,7 @@ import (
 	"fmt"
 	neturl "net/url"
 
-	"gitlab.com/newsletter2go/hrobot-go/models"
+	"github.com/nl2go/hrobot-go/models"
 )
 
 func (c *Client) ServerGetList() ([]models.Server, error) {

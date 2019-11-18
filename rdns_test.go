@@ -7,7 +7,7 @@ import (
 	"net/http/httptest"
 	"os"
 
-	client "gitlab.com/newsletter2go/hrobot-go"
+	client "github.com/nl2go/hrobot-go"
 	. "gopkg.in/check.v1"
 )
 

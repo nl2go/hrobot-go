@@ -6,7 +6,7 @@ import (
 	neturl "net/url"
 	"strconv"
 
-	"gitlab.com/newsletter2go/hrobot-go/models"
+	"github.com/nl2go/hrobot-go/models"
 )
 
 func (c *Client) BootRescueGet(ip string) (*models.Rescue, error) {

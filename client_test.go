@@ -8,7 +8,7 @@ import (
 	"os"
 	"testing"
 
-	client "gitlab.com/newsletter2go/hrobot-go"
+	client "github.com/nl2go/hrobot-go"
 	. "gopkg.in/check.v1"
 )
 
