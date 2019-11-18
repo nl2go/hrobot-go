@@ -1,6 +1,6 @@
 # hrobot-go: A Go library for the Hetzner Robot Webservice
 
-![Coverage](https://gitlab.com/newsletter2go/hrobot-go/badges/master/coverage.svg)
+![Build](https://gitlab.com/newsletter2go/hrobot-go/badges/master/pipeline.svg) ![Coverage](https://gitlab.com/newsletter2go/hrobot-go/badges/master/coverage.svg)
 
 Package hrobot-go is a library for the Hetzner Robot Webservice.
 
