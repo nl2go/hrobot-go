@@ -39,3 +39,33 @@ func (s *ClientSuite) TestIPListSuccess(c *C) {
 	c.Assert(ips[0].ServerIP, Equals, testServerIP)
 	c.Assert(ips[1].ServerIP, Equals, testServerIP)
 }
+
+func (s *ClientSuite) TestIPListInvalidResponse(c *C) {
+	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusOK)
+
+		_, err := w.Write([]byte("invalid JSON"))
+		c.Assert(err, IsNil)
+	}))
+	defer ts.Close()
+
+	robotClient := client.NewBasicAuthClient("user", "pass")
+	robotClient.SetBaseURL(ts.URL)
+
+	_, err := robotClient.IPGetList()
+	c.Assert(err, Not(IsNil))
+}
+
+func (s *ClientSuite) TestIPListServerError(c *C) {
+	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusInternalServerError)
+	}))
+	defer ts.Close()
+
+	robotClient := client.NewBasicAuthClient("user", "pass")
+	robotClient.SetBaseURL(ts.URL)
+
+	_, err := robotClient.IPGetList()
+	c.Assert(err, Not(IsNil))
+}

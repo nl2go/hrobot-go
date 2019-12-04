@@ -36,6 +36,36 @@ func (s *ClientSuite) TestFailoverGetListSuccess(c *C) {
 	c.Assert(failoverList[0].IP, Equals, testIP)
 }
 
+func (s *ClientSuite) TestFailoverGetListInvalidResponse(c *C) {
+	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusOK)
+
+		_, err := w.Write([]byte("invalid JSON"))
+		c.Assert(err, IsNil)
+	}))
+	defer ts.Close()
+
+	robotClient := client.NewBasicAuthClient("user", "pass")
+	robotClient.SetBaseURL(ts.URL)
+
+	_, err := robotClient.FailoverGetList()
+	c.Assert(err, Not(IsNil))
+}
+
+func (s *ClientSuite) TestFailoverGetListServerError(c *C) {
+	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusInternalServerError)
+	}))
+	defer ts.Close()
+
+	robotClient := client.NewBasicAuthClient("user", "pass")
+	robotClient.SetBaseURL(ts.URL)
+
+	_, err := robotClient.FailoverGetList()
+	c.Assert(err, Not(IsNil))
+}
+
 func (s *ClientSuite) TestFailoverGetSuccess(c *C) {
 	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
@@ -58,4 +88,34 @@ func (s *ClientSuite) TestFailoverGetSuccess(c *C) {
 	failover, err := robotClient.FailoverGet(testIP)
 	c.Assert(err, IsNil)
 	c.Assert(failover.IP, Equals, testIP)
+}
+
+func (s *ClientSuite) TestFailoverGetInvalidResponse(c *C) {
+	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusOK)
+
+		_, err := w.Write([]byte("invalid JSON"))
+		c.Assert(err, IsNil)
+	}))
+	defer ts.Close()
+
+	robotClient := client.NewBasicAuthClient("user", "pass")
+	robotClient.SetBaseURL(ts.URL)
+
+	_, err := robotClient.FailoverGet(testIP)
+	c.Assert(err, Not(IsNil))
+}
+
+func (s *ClientSuite) TestFailoverGetServerError(c *C) {
+	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusInternalServerError)
+	}))
+	defer ts.Close()
+
+	robotClient := client.NewBasicAuthClient("user", "pass")
+	robotClient.SetBaseURL(ts.URL)
+
+	_, err := robotClient.FailoverGet(testIP)
+	c.Assert(err, Not(IsNil))
 }
