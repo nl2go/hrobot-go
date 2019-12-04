@@ -35,3 +35,33 @@ func (s *ClientSuite) TestKeyListSuccess(c *C) {
 	c.Assert(err, IsNil)
 	c.Assert(len(keys), Equals, 2)
 }
+
+func (s *ClientSuite) TestKeyListInvalidResponse(c *C) {
+	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusOK)
+
+		_, err := w.Write([]byte("invalid JSON"))
+		c.Assert(err, IsNil)
+	}))
+	defer ts.Close()
+
+	robotClient := client.NewBasicAuthClient("user", "pass")
+	robotClient.SetBaseURL(ts.URL)
+
+	_, err := robotClient.KeyGetList()
+	c.Assert(err, Not(IsNil))
+}
+
+func (s *ClientSuite) TestKeyListServerError(c *C) {
+	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusInternalServerError)
+	}))
+	defer ts.Close()
+
+	robotClient := client.NewBasicAuthClient("user", "pass")
+	robotClient.SetBaseURL(ts.URL)
+
+	_, err := robotClient.KeyGetList()
+	c.Assert(err, Not(IsNil))
+}

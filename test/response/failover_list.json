@@ -1,0 +1,11 @@
+[
+  {
+    "failover": {
+      "ip": "123.123.123.123",
+      "netmask": "255.255.255.255",
+      "server_ip": "78.46.1.93",
+      "server_number": 321,
+      "active_server_ip": "78.46.1.93"
+    }
+  }
+]

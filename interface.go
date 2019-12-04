@@ -18,4 +18,6 @@ type RobotClient interface {
 	BootRescueSet(ip string, input *models.RescueSetInput) (*models.Rescue, error)
 	ResetGet(ip string) (*models.Reset, error)
 	ResetSet(ip string, input *models.ResetSetInput) (*models.ResetPost, error)
+	FailoverGetList() ([]models.Failover, error)
+	FailoverGet(ip string) (*models.Failover, error)
 }

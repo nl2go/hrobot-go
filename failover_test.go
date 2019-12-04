@@ -11,7 +11,7 @@ import (
 	. "gopkg.in/check.v1"
 )
 
-func (s *ClientSuite) TestRDnsGetListSuccess(c *C) {
+func (s *ClientSuite) TestFailoverGetListSuccess(c *C) {
 	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusOK)
@@ -19,7 +19,7 @@ func (s *ClientSuite) TestRDnsGetListSuccess(c *C) {
 		pwd, pwdErr := os.Getwd()
 		c.Assert(pwdErr, IsNil)
 
-		data, readErr := ioutil.ReadFile(fmt.Sprintf("%s/test/response/rdns_list.json", pwd))
+		data, readErr := ioutil.ReadFile(fmt.Sprintf("%s/test/response/failover_list.json", pwd))
 		c.Assert(readErr, IsNil)
 
 		_, err := w.Write(data)
@@ -30,14 +30,13 @@ func (s *ClientSuite) TestRDnsGetListSuccess(c *C) {
 	robotClient := client.NewBasicAuthClient("user", "pass")
 	robotClient.SetBaseURL(ts.URL)
 
-	rdnsList, err := robotClient.RDnsGetList()
+	failoverList, err := robotClient.FailoverGetList()
 	c.Assert(err, IsNil)
-	c.Assert(len(rdnsList), Equals, 2)
-	c.Assert(rdnsList[0].IP, Equals, testIP)
-	c.Assert(rdnsList[1].IP, Equals, testIP2)
+	c.Assert(len(failoverList), Equals, 1)
+	c.Assert(failoverList[0].IP, Equals, testIP)
 }
 
-func (s *ClientSuite) TestRDnsGetListInvalidResponse(c *C) {
+func (s *ClientSuite) TestFailoverGetListInvalidResponse(c *C) {
 	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusOK)
@@ -50,11 +49,11 @@ func (s *ClientSuite) TestRDnsGetListInvalidResponse(c *C) {
 	robotClient := client.NewBasicAuthClient("user", "pass")
 	robotClient.SetBaseURL(ts.URL)
 
-	_, err := robotClient.RDnsGetList()
+	_, err := robotClient.FailoverGetList()
 	c.Assert(err, Not(IsNil))
 }
 
-func (s *ClientSuite) TestRDnsGetListServerError(c *C) {
+func (s *ClientSuite) TestFailoverGetListServerError(c *C) {
 	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusInternalServerError)
 	}))
@@ -63,11 +62,11 @@ func (s *ClientSuite) TestRDnsGetListServerError(c *C) {
 	robotClient := client.NewBasicAuthClient("user", "pass")
 	robotClient.SetBaseURL(ts.URL)
 
-	_, err := robotClient.RDnsGetList()
+	_, err := robotClient.FailoverGetList()
 	c.Assert(err, Not(IsNil))
 }
 
-func (s *ClientSuite) TestRDnsGetSuccess(c *C) {
+func (s *ClientSuite) TestFailoverGetSuccess(c *C) {
 	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusOK)
@@ -75,7 +74,7 @@ func (s *ClientSuite) TestRDnsGetSuccess(c *C) {
 		pwd, pwdErr := os.Getwd()
 		c.Assert(pwdErr, IsNil)
 
-		data, readErr := ioutil.ReadFile(fmt.Sprintf("%s/test/response/rdns_get.json", pwd))
+		data, readErr := ioutil.ReadFile(fmt.Sprintf("%s/test/response/failover_get.json", pwd))
 		c.Assert(readErr, IsNil)
 
 		_, err := w.Write(data)
@@ -86,12 +85,12 @@ func (s *ClientSuite) TestRDnsGetSuccess(c *C) {
 	robotClient := client.NewBasicAuthClient("user", "pass")
 	robotClient.SetBaseURL(ts.URL)
 
-	rdns, err := robotClient.RDnsGet(testIP)
+	failover, err := robotClient.FailoverGet(testIP)
 	c.Assert(err, IsNil)
-	c.Assert(rdns.IP, Equals, testIP)
+	c.Assert(failover.IP, Equals, testIP)
 }
 
-func (s *ClientSuite) TestRDnsGetInvalidResponse(c *C) {
+func (s *ClientSuite) TestFailoverGetInvalidResponse(c *C) {
 	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusOK)
@@ -104,11 +103,11 @@ func (s *ClientSuite) TestRDnsGetInvalidResponse(c *C) {
 	robotClient := client.NewBasicAuthClient("user", "pass")
 	robotClient.SetBaseURL(ts.URL)
 
-	_, err := robotClient.RDnsGet(testIP)
+	_, err := robotClient.FailoverGet(testIP)
 	c.Assert(err, Not(IsNil))
 }
 
-func (s *ClientSuite) TestRDnsGetServerError(c *C) {
+func (s *ClientSuite) TestFailoverGetServerError(c *C) {
 	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusInternalServerError)
 	}))
@@ -117,6 +116,6 @@ func (s *ClientSuite) TestRDnsGetServerError(c *C) {
 	robotClient := client.NewBasicAuthClient("user", "pass")
 	robotClient.SetBaseURL(ts.URL)
 
-	_, err := robotClient.RDnsGet(testIP)
+	_, err := robotClient.FailoverGet(testIP)
 	c.Assert(err, Not(IsNil))
 }
