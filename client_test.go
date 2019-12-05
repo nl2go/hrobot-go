@@ -10,6 +10,8 @@ import (
 
 	client "github.com/nl2go/hrobot-go"
 	. "gopkg.in/check.v1"
+
+	"github.com/nl2go/hrobot-go/models"
 )
 
 // Hook up gocheck into the "go test" runner.
@@ -53,9 +55,10 @@ func (s *ClientSuite) TestSetDefaultUserAgent(c *C) {
 }
 
 func (s *ClientSuite) TestSetCustomUserAgent(c *C) {
+	expectedUserAgent := "hrobot-testsuite/0.0.1"
 	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		reqUserAgent := r.Header.Get("User-Agent")
-		c.Assert(reqUserAgent, Equals, "hrobot-testsuite/0.0.1")
+		c.Assert(reqUserAgent, Equals, expectedUserAgent)
 
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusOK)
@@ -72,9 +75,37 @@ func (s *ClientSuite) TestSetCustomUserAgent(c *C) {
 	defer ts.Close()
 
 	robotClient := client.NewBasicAuthClient("user", "pass")
-	robotClient.SetUserAgent("hrobot-testsuite/0.0.1")
+	robotClient.SetUserAgent(expectedUserAgent)
 	robotClient.SetBaseURL(ts.URL)
 
 	_, err := robotClient.ServerGetList()
 	c.Assert(err, IsNil)
+}
+
+func (s *ClientSuite) TestGetInvalidURL(c *C) {
+	robotClient := client.NewBasicAuthClient("user", "pass")
+	robotClient.SetBaseURL("http://Not a valid URL")
+
+	_, err := robotClient.ServerGetList()
+	c.Assert(err, Not(IsNil))
+}
+
+func (s *ClientSuite) TestPostIvalidURL(c *C) {
+	robotClient := client.NewBasicAuthClient("user", "pass")
+	robotClient.SetBaseURL("http://Not a valid URL")
+
+	input := &models.ServerSetNameInput{
+		Name: "server-name-123456",
+	}
+
+	_, err := robotClient.ServerSetName(testServerIP, input)
+	c.Assert(err, Not(IsNil))
+}
+
+func (s *ClientSuite) TestGetNonExistentURL(c *C) {
+	robotClient := client.NewBasicAuthClient("user", "pass")
+	robotClient.SetBaseURL("http://DoesNotExist.nl2go")
+
+	_, err := robotClient.ServerGetList()
+	c.Assert(err, Not(IsNil))
 }

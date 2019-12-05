@@ -6,11 +6,7 @@
       "arch":32,
       "active":true,
       "password":"jEt0dtUvomlyOwRr",
-      "authorized_key":[
-  
-      ],
-      "host_key":[
-  
-      ]
+      "authorized_key":[],
+      "host_key":[]
     }
   }
